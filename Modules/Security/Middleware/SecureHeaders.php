@@ -38,6 +38,13 @@ class SecureHeaders
     {
         $base = (string) config('security.headers.content_security_policy');
 
+        // In dev, the Vite server serves assets, HMR scripts, styles and fonts
+        // from a separate origin. Relax the policy to allow it rather than
+        // weakening the production policy.
+        if (Vite::isRunningHot()) {
+            return $this->buildDevCsp($base);
+        }
+
         if ($nonce === '') {
             return $base;
         }
@@ -48,5 +55,37 @@ class SecureHeaders
             "script-src $1 'nonce-{$nonce}'",
             $base,
         );
+    }
+
+    /**
+     * Rewrite the CSP to permit the running Vite dev server (its HTTP origin
+     * for scripts/styles/fonts and its websocket for HMR). Dev-only.
+     */
+    private function buildDevCsp(string $base): string
+    {
+        $devServer = trim((string) @file_get_contents(Vite::hotFile()));
+
+        if ($devServer === '') {
+            return $base;
+        }
+
+        $ws = (string) preg_replace('/^http/', 'ws', $devServer);
+
+        $additions = [
+            'script-src' => "{$devServer} 'unsafe-inline' 'unsafe-eval'",
+            'style-src' => $devServer,
+            'font-src' => $devServer,
+            'connect-src' => "{$devServer} {$ws}",
+        ];
+
+        foreach ($additions as $directive => $extra) {
+            $base = (string) preg_replace(
+                "/{$directive} ([^;]*)/",
+                "{$directive} $1 {$extra}",
+                $base,
+            );
+        }
+
+        return $base;
     }
 }
