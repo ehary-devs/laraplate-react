@@ -1,0 +1,7 @@
+{
+    "name": "Access",
+    "description": "RBAC — roles, permissions, direct permission assignment",
+    "version": "1.0.0",
+    "active": true,
+    "dependencies": []
+}

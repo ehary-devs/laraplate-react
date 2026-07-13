@@ -1,0 +1,7 @@
+{
+    "name": "AuditLog",
+    "description": "Immutable forensic audit trail",
+    "version": "1.0.0",
+    "active": true,
+    "dependencies": []
+}

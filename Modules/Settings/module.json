@@ -1,0 +1,7 @@
+{
+    "name": "Settings",
+    "description": "Key-value application settings with cache and UI management",
+    "version": "1.0.0",
+    "active": true,
+    "dependencies": []
+}

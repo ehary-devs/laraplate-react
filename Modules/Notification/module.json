@@ -1,0 +1,7 @@
+{
+    "name": "Notification",
+    "description": "Event-driven notification recording and display",
+    "version": "1.0.0",
+    "active": true,
+    "dependencies": []
+}

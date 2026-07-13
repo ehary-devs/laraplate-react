@@ -1,0 +1,7 @@
+{
+    "name": "Dashboard",
+    "description": "Admin dashboard — stat widgets and recent activity",
+    "version": "1.0.0",
+    "active": true,
+    "dependencies": []
+}

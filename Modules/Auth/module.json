@@ -1,0 +1,7 @@
+{
+    "name": "Auth",
+    "description": "Authentication events, lockout notification (Fortify-backed)",
+    "version": "1.0.0",
+    "active": true,
+    "dependencies": []
+}

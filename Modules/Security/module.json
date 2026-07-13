@@ -1,0 +1,7 @@
+{
+    "name": "Security",
+    "description": "Security hardening — headers, CSP, session hardening",
+    "version": "1.0.0",
+    "active": true,
+    "dependencies": []
+}

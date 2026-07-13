@@ -1,0 +1,7 @@
+{
+    "name": "User",
+    "description": "User management — CRUD, role and permission assignment",
+    "version": "1.0.0",
+    "active": true,
+    "dependencies": ["Access"]
+}
