@@ -1,4 +1,5 @@
 import { LayoutGrid, Shield, Users } from 'lucide-react';
+import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
 /**
@@ -8,7 +9,7 @@ import type { NavItem } from '@/types';
 export const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: '/dashboard',
+        href: dashboard(),
         icon: LayoutGrid,
     },
     {
