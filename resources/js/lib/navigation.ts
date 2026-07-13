@@ -1,4 +1,5 @@
 import { LayoutGrid, Shield, Users } from 'lucide-react';
+import { index as usersIndex } from '@/actions/Modules/User/Http/Controllers/UserController';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
@@ -14,7 +15,7 @@ export const mainNavItems: NavItem[] = [
     },
     {
         title: 'Users',
-        href: '/users',
+        href: usersIndex(),
         icon: Users,
         permission: 'user.view',
     },
