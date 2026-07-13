@@ -2,6 +2,7 @@
 
 namespace Modules\Dashboard;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class DashboardServiceProvider extends ServiceProvider
@@ -13,6 +14,8 @@ class DashboardServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Routes and Inertia pages are wired in later phases (R4).
+        Route::middleware('web')->group(function (): void {
+            $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+        });
     }
 }
