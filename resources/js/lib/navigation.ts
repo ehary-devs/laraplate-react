@@ -1,4 +1,6 @@
-import { LayoutGrid, Shield, Users } from 'lucide-react';
+import { KeyRound, LayoutGrid, Shield, Users } from 'lucide-react';
+import { index as permissionsIndex } from '@/actions/Modules/Access/Http/Controllers/PermissionController';
+import { index as rolesIndex } from '@/actions/Modules/Access/Http/Controllers/RoleController';
 import { index as usersIndex } from '@/actions/Modules/User/Http/Controllers/UserController';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
@@ -20,9 +22,15 @@ export const mainNavItems: NavItem[] = [
         permission: 'user.view',
     },
     {
-        title: 'Roles & Permissions',
-        href: '/access/roles',
+        title: 'Roles',
+        href: rolesIndex(),
         icon: Shield,
         permission: 'role.view',
+    },
+    {
+        title: 'Permissions',
+        href: permissionsIndex(),
+        icon: KeyRound,
+        permission: 'permission.view',
     },
 ];

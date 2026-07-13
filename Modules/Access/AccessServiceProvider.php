@@ -4,6 +4,7 @@ namespace Modules\Access;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Modules\Access\Middleware\PermissionMiddleware;
 use Modules\Access\Middleware\RoleMiddleware;
@@ -19,6 +20,14 @@ class AccessServiceProvider extends ServiceProvider
     {
         $this->loadMiddleware();
         $this->registerGate();
+        $this->loadModuleRoutes();
+    }
+
+    private function loadModuleRoutes(): void
+    {
+        Route::middleware('web')->group(function (): void {
+            $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+        });
     }
 
     private function loadMiddleware(): void

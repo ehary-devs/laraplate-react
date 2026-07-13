@@ -4,6 +4,7 @@ namespace Modules\Access\Services;
 
 use App\Core\Services\BaseService;
 use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 use Modules\Access\Events\PermissionGranted;
@@ -15,6 +16,36 @@ use Modules\Access\Models\Role;
 
 class AccessService extends BaseService
 {
+    /**
+     * Paginated, filtered role list for the DataTable.
+     *
+     * @return LengthAwarePaginator<int, Role>
+     */
+    public function listRoles(): LengthAwarePaginator
+    {
+        return $this->paginateQuery(Role::query()->withCount('permissions', 'users'), [
+            'searchable' => ['name', 'slug'],
+            'sortable' => ['name', 'slug', 'created_at'],
+            'default_sort' => 'name',
+            'default_dir' => 'asc',
+        ]);
+    }
+
+    /**
+     * Paginated, filtered permission list for the DataTable.
+     *
+     * @return LengthAwarePaginator<int, Permission>
+     */
+    public function listPermissions(): LengthAwarePaginator
+    {
+        return $this->paginateQuery(Permission::query(), [
+            'searchable' => ['name', 'slug', 'group'],
+            'sortable' => ['name', 'slug', 'group'],
+            'default_sort' => 'group',
+            'default_dir' => 'asc',
+        ]);
+    }
+
     /** @param array<string, mixed> $data */
     public function createRole(array $data): Role
     {
