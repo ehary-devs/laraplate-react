@@ -54,7 +54,7 @@ class HandleInertiaRequests extends Middleware
                     'roles' => $user->roles->pluck('slug')->all(),
                 ] : null,
                 'permissions' => $user
-                    ? $user->getAllPermissions()->pluck('slug')->values()->all()
+                    ? $user->getPermissionSlugs()->all()
                     : [],
             ],
             'settings' => [

@@ -84,3 +84,20 @@ describe('hasPermissionTo (effective = union)', function () {
         expect($this->user->hasPermissionTo('posts.edit'))->toBeFalse();
     });
 });
+
+describe('getPermissionSlugs (cache is serialization-safe)', function () {
+    it('caches plain slug strings, not Eloquent models', function () {
+        $this->role->givePermissionTo($this->permission);
+        $this->user->assignRole('editor');
+        $this->user->givePermissionTo('posts.edit');
+
+        $slugs = $this->user->getPermissionSlugs();
+
+        expect($slugs->all())->toEqual(['posts.edit']);
+        $slugs->each(fn ($slug) => expect($slug)->toBeString());
+
+        // Cached entry must round-trip through serialize() cleanly.
+        $cached = cache()->get("user_permissions_{$this->user->id}");
+        expect(unserialize(serialize($cached))->all())->toEqual(['posts.edit']);
+    });
+});

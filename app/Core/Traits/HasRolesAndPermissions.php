@@ -78,21 +78,41 @@ trait HasRolesAndPermissions
             return true;
         }
 
-        return $this->getAllPermissions()->contains('slug', $slug);
+        return $this->getPermissionSlugs()->contains($slug);
     }
 
-    /** @return Collection<int, Permission> */
-    public function getAllPermissions(): Collection
+    /**
+     * Effective permission slugs (role + direct, union), cached per user.
+     *
+     * Only slug strings are cached — never Eloquent models — so the entry stays
+     * safe to unserialize across requests regardless of cache driver.
+     *
+     * @return Collection<int, string>
+     */
+    public function getPermissionSlugs(): Collection
     {
         $cacheKey = "user_permissions_{$this->id}";
 
         return cache()->remember($cacheKey, now()->addMinutes(60), function () {
             $this->loadMissing('roles.permissions', 'directPermissions');
 
-            $rolePermissions = $this->roles->flatMap(fn (Role $r) => $r->permissions);
+            $rolePermissions = $this->roles->flatMap(fn (Role $r) => $r->permissions->pluck('slug'));
 
-            return $rolePermissions->merge($this->directPermissions)->unique('id');
+            return $rolePermissions
+                ->merge($this->directPermissions->pluck('slug'))
+                ->unique()
+                ->values();
         });
+    }
+
+    /** @return Collection<int, Permission> */
+    public function getAllPermissions(): Collection
+    {
+        $this->loadMissing('roles.permissions', 'directPermissions');
+
+        $rolePermissions = $this->roles->flatMap(fn (Role $r) => $r->permissions);
+
+        return $rolePermissions->merge($this->directPermissions)->unique('id')->values();
     }
 
     public function clearPermissionCache(): void
