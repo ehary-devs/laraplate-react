@@ -18,9 +18,13 @@ class SettingsService extends BaseService
      */
     public function get(string $key, mixed $default = null): mixed
     {
-        $setting = $this->all()->get($key);
+        $settings = $this->all();
 
-        return $setting?->casted_value ?? $default;
+        if (! $settings->has($key)) {
+            return $default;
+        }
+
+        return $settings->get($key)->casted_value ?? $default;
     }
 
     /**
@@ -32,7 +36,7 @@ class SettingsService extends BaseService
 
         $oldValue = $setting->casted_value;
 
-        $stored = is_array($value) ? json_encode($value) : (string) $value;
+        $stored = is_array($value) ? json_encode($value, JSON_THROW_ON_ERROR) : (string) $value;
 
         if ($setting->is_encrypted && $stored !== '') {
             $stored = Crypt::encryptString($stored);

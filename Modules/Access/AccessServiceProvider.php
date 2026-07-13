@@ -2,6 +2,7 @@
 
 namespace Modules\Access;
 
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Modules\Access\Middleware\PermissionMiddleware;
@@ -22,7 +23,7 @@ class AccessServiceProvider extends ServiceProvider
 
     private function loadMiddleware(): void
     {
-        $router = $this->app['router'];
+        $router = $this->app->make(Router::class);
         $router->aliasMiddleware('role', RoleMiddleware::class);
         $router->aliasMiddleware('permission', PermissionMiddleware::class);
     }

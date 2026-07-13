@@ -29,24 +29,39 @@ abstract class IdempotentListener
 
     private function alreadyProcessed(object $event): bool
     {
-        if (! property_exists($event, 'idempotencyKey') || $event->idempotencyKey === '') {
+        $key = $this->idempotencyKey($event);
+
+        if ($key === null) {
             return false;
         }
 
-        return Cache::has($this->cacheKey($event));
+        return Cache::has($this->cacheKey($key));
     }
 
     private function markProcessed(object $event): void
     {
-        if (! property_exists($event, 'idempotencyKey') || $event->idempotencyKey === '') {
+        $key = $this->idempotencyKey($event);
+
+        if ($key === null) {
             return;
         }
 
-        Cache::put($this->cacheKey($event), true, $this->idempotencyTtl);
+        Cache::put($this->cacheKey($key), true, $this->idempotencyTtl);
     }
 
-    private function cacheKey(object $event): string
+    private function idempotencyKey(object $event): ?string
     {
-        return sprintf('idempotent_listener:%s:%s', static::class, $event->idempotencyKey);
+        if (! property_exists($event, 'idempotencyKey')) {
+            return null;
+        }
+
+        $key = $event->idempotencyKey;
+
+        return is_string($key) && $key !== '' ? $key : null;
+    }
+
+    private function cacheKey(string $idempotencyKey): string
+    {
+        return sprintf('idempotent_listener:%s:%s', static::class, $idempotencyKey);
     }
 }

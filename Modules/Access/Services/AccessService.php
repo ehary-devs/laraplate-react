@@ -4,6 +4,7 @@ namespace Modules\Access\Services;
 
 use App\Core\Services\BaseService;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 use Modules\Access\Events\PermissionGranted;
 use Modules\Access\Events\PermissionRevoked;
@@ -91,9 +92,9 @@ class AccessService extends BaseService
         event(new PermissionRevoked($user, Permission::where('slug', $permissionSlug)->first()));
     }
 
-    /** @return Collection<string, Collection<int, Permission>> */
+    /** @return Collection<array-key, EloquentCollection<int, Permission>> */
     public function getPermissionsGrouped(): Collection
     {
-        return Permission::all()->groupBy('group');
+        return Permission::all()->groupBy('group')->toBase();
     }
 }

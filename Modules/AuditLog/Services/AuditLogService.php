@@ -33,9 +33,9 @@ class AuditLogService extends BaseService
             'auditable_id' => $auditableId,
             'old_values' => $oldValues,
             'new_values' => $newValues,
-            'ip_address' => $request?->ip(),
-            'user_agent' => $request?->userAgent(),
-            'url' => $request?->fullUrl(),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'url' => $request->fullUrl(),
             'tags' => $tags,
         ]);
     }

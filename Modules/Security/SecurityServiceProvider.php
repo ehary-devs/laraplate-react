@@ -16,8 +16,7 @@ class SecurityServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->app->booted(function () {
-            /** @var Router $router */
-            $router = $this->app['router'];
+            $router = $this->app->make(Router::class);
             $router->pushMiddlewareToGroup('web', SecureHeaders::class);
         });
     }

@@ -48,7 +48,7 @@ trait HasRolesAndPermissions
         return $this->roles->contains('slug', $slug);
     }
 
-    /** @param array<int, string|Role> $roles */
+    /** @param array<array-key, string|Role> $roles */
     public function hasAnyRole(array $roles): bool
     {
         return collect($roles)->some(fn ($role) => $this->hasRole($role));
